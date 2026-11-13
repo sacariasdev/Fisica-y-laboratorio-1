@@ -1,0 +1,88 @@
+:root{
+  --bg:#0f0f0f; --panel:#212121; --hover:#2d2d2d; --ink:#f1f1f1; --muted:#aaaaaa;
+  --red:#ff0033; --ctrl:rgba(255,255,255,.95);
+  box-sizing:border-box;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Roboto,"Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+
+.top{display:flex;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid #272727}
+.top h1{margin:0;font-size:1.15rem;font-weight:600}
+.logo{font-size:1.5rem}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;max-width:1500px;margin:0 auto;padding:24px}
+@media (max-width:980px){.layout{grid-template-columns:1fr;padding:12px}}
+
+/* ---- Reproductor ---- */
+.player{position:relative;background:#000;border-radius:12px;overflow:hidden;width:100%;height:min(78vh,820px);display:flex;justify-content:center;outline:none;user-select:none}
+.player video{height:100%;max-width:100%;background:#000;display:block;cursor:pointer}
+@media (max-width:980px){.player{height:72vh}}
+.player:fullscreen{height:100vh;border-radius:0}
+.player:fullscreen video{width:100%}
+
+.big-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;border:0;background:rgba(0,0,0,.65);cursor:pointer;display:grid;place-items:center}
+.big-play svg{width:38px;height:38px;fill:#fff}
+.big-play:hover{background:var(--red)}
+.player.playing .big-play{display:none}
+
+.controls{position:absolute;left:0;right:0;bottom:0;padding:28px 12px 6px;background:linear-gradient(transparent,rgba(0,0,0,.8));transition:opacity .25s}
+.player.playing.idle .controls{opacity:0;pointer-events:none}
+.player.playing.idle{cursor:none}
+
+.progress{position:relative;height:5px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin:0 4px 8px;transition:height .1s}
+.progress:hover,.progress.drag{height:8px}
+.progress .buffer,.progress .played{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.progress .buffer{background:rgba(255,255,255,.35);width:0}
+.progress .played{background:var(--red);width:0}
+.knob{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--red);transform:translate(-50%,-50%) scale(0);left:0;transition:transform .1s}
+.progress:hover .knob,.progress.drag .knob{transform:translate(-50%,-50%) scale(1)}
+.tip{position:absolute;bottom:18px;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;font-size:.8rem;padding:3px 7px;border-radius:4px;display:none;pointer-events:none}
+.progress:hover .tip{display:block}
+
+.bar{display:flex;align-items:center;gap:4px}
+.bar button{background:none;border:0;color:#fff;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;padding:0}
+.bar button:hover{background:rgba(255,255,255,.15)}
+.bar button:focus-visible{outline:2px solid #fff}
+.bar svg{width:24px;height:24px;fill:#fff}
+.bar .txt{width:auto;padding:0 12px;border-radius:18px;font:600 .9rem Roboto,Arial,sans-serif}
+.spacer{flex:1}
+.time{font-size:.85rem;color:var(--ctrl);margin-left:8px;white-space:nowrap}
+
+.i-pause,.i-mute,.i-fsx{display:none}
+.player.playing .i-play{display:none}
+.player.playing .i-pause{display:block}
+.player.muted .i-vol{display:none}
+.player.muted .i-mute{display:block}
+.player.full .i-fs{display:none}
+.player.full .i-fsx{display:block}
+
+.vol{display:flex;align-items:center}
+.vol input{width:0;opacity:0;transition:width .2s,opacity .2s;accent-color:#fff;cursor:pointer}
+.vol:hover input,.vol input:focus{width:72px;opacity:1;margin-right:8px}
+
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;bottom:48px;margin:0;padding:6px 0;list-style:none;background:rgba(28,28,28,.95);border-radius:10px;min-width:120px}
+.menu[hidden]{display:none}
+.menu li{padding:8px 18px;font-size:.9rem;cursor:pointer;color:#fff}
+.menu li:hover{background:rgba(255,255,255,.12)}
+.menu li.on{font-weight:700;color:var(--red)}
+
+.title{font-size:1.25rem;font-weight:600;margin:14px 4px 0}
+
+/* ---- Lista lateral ---- */
+.list{display:flex;flex-direction:column;gap:12px}
+.item{display:flex;gap:12px;padding:8px;border-radius:10px;cursor:pointer;background:none;border:0;color:inherit;font:inherit;text-align:left}
+.item:hover{background:var(--hover)}
+.item.on{background:var(--panel)}
+.item:focus-visible{outline:2px solid #fff}
+.thumb{position:relative;flex:0 0 96px;aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#000}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .len{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.8);font-size:.72rem;padding:1px 5px;border-radius:4px}
+.item h3{margin:2px 0 4px;font-size:1rem;font-weight:600}
+.item p{margin:0;font-size:.85rem;color:var(--muted)}
+.item .now{color:var(--red);font-size:.8rem;font-weight:700;margin-top:6px}
+@media (max-width:980px){
+  .list{flex-direction:row;overflow-x:auto}
+  .item{flex:0 0 260px}
+}
